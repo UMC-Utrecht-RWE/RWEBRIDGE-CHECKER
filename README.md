@@ -1,10 +1,10 @@
 
-# metadatachecker
+# RWEBRIDGE-CHECKER
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-RWE-metadatachecker is an R package with a Shiny app for meta data file comparison to check the consistencies. The goal is to diagnose the inconsistencies between the meta data files before running the analytical pipeline.
+RWEBRIDGE-CHECKER is an R package with a Shiny app for meta data file comparison to check the consistencies. The goal is to diagnose the inconsistencies between the meta data files before running the analytical pipeline.
 
 ## Installation
 
