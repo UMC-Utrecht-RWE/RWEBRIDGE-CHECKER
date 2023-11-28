@@ -77,18 +77,19 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                        if (length(setdiff(expected_column_list,table_columns)) > 0 ){
                          column_note = paste0(column_note, 
                                               table_name, 
-                                              " is missing ",
+                                              " is missing '",
                                               setdiff(expected_column_list,
                                                       table_columns),
-                                              ". ")
+                                              "' "
+                                              )
                        }
                        if (length(setdiff(table_columns, expected_column_list)) > 0 ){
                          column_note = paste0(column_note, 
                                               table_name, 
-                                              " has ",
+                                              " has '",
                                               setdiff(table_columns, 
                                                       expected_column_list),
-                                              " which are not found in the schema.")
+                                              "' which is not found in the schema")
                        }
                      }
                    }

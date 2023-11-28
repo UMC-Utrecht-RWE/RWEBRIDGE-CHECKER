@@ -1,0 +1,3 @@
+variable_id,concept_id,exposure,outcome,covariate,data_type,start_look_back,random
+Var1,var2,TRUE,TRUE,FALSE,TF,1,1
+Var1,var2,TRUE,TRUE,FALSE,TF,1,2

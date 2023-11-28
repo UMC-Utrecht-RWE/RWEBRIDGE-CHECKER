@@ -1,0 +1,3 @@
+variable_id;concept_id;exposure;outcome;covariate;data_type;start_look_back;end_look_back;variable_description
+Var1;var2;TRUE;TRUE;FALSE;TF;1;10;2
+Var1;var2;TRUE;TRUE;FALSE;TF;1;10;2

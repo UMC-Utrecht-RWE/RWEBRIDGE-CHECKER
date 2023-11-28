@@ -1,3 +1,12 @@
+
+For future
+2. Format of the columns check to see if they are in expected numeric/bool/ etc type, again from the json file
+
+For this we need to define allowed values
+
+
+
+-----DONE-----
 1.- Format anad availablity check of the table(s) by comparing with json template
 f(user_input, reference_json)
 multiple file selection should be available. Check if the table is in expected format by looking at primary key, but also foreign keys and the owner tables of these foreign keys. Return user tables names with flag (P/F) and also additional information where it failed:
@@ -7,8 +16,3 @@ Is the connected table there?
 Is the expected columns are there for these tables?
 
 This will be in shiny app also
-
-For future
-2. Format of the columns check to see if they are in expected numeric/bool/ etc type, again from teh json file
-
-For this we need to define allowed values
