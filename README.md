@@ -4,24 +4,24 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-RWEBRIDGE-CHECKER is an R package with a Shiny app for meta data file comparison to check the consistencies. The goal is to diagnose the inconsistencies between the meta data files before running the analytical pipeline.
+RWEBRIDGE-CHECKER is an R package with a Shiny app for meta data file comparison to check the consistencies. The goal is to diagnose the inconsistencies between the meta data files before running the analytical pipeline. This package is the generalized version of metadatachecker, implemented within BRIDGE framework.
 
 ## Installation
 
-You can install the development version of metadatachecker (or the latest stable release) like so:
+You can install the development version of RWEBRIDGE-CHECKER (or the latest stable release) like so:
 
 **Option 1.** Using devtools (recommended):
 
 Download and unzip (in your working enviroment) or clone the repo. Let's say your folder is here:
 
-- on Mac, the *"path_to_the_directory_of_the_package"* looks something like this: "/Users/zkurkcuo/Desktop/metadatachecker"
-- on Windows, the *"path_to_the_directory_of_the_package"* looks something like this: "C:/Users/zkurkcuo/Desktop/metadatachecker" (it should be **"/"**, and not "\\")
+- on Mac, the *"path_to_the_directory_of_the_package"* looks something like this: "/Users/zkurkcuo/Desktop/RWEBRIDGE-CHECKER"
+- on Windows, the *"path_to_the_directory_of_the_package"* looks something like this: "C:/Users/zkurkcuo/Desktop/RWEBRIDGE-CHECKER" (it should be **"/"**, and not "\\")
 
 and on R console, type the following:
 ``` r
 # If you don't have devtools, install it
 install.packages("devtools")
-#Install metadatachecker (with vignettes) by typing this on R console
+#Install RWEBRIDGE-CHECKER (with vignettes) by typing this on R console
 devtools::install("path_to_the_directory_of_the_package", dependencies = TRUE, build_vignettes = T)
 ```
 If it asks about updating the packages that are available in your system, I usually skip it and hope that I won't break anything. So far it worked, but please check it.
@@ -42,18 +42,18 @@ needed libraries for metadatachecker:
 
 ## Example
 
-Here is how you can use metadatachecker: 
+Here is how you can use RWEBRIDGE-CHECKER: 
 
 
 On R console, type the following:
 ``` r
-library(metadatachecker)
+library(RWEBRIDGE-CHECKER)
 ```
 
 After importing the library, write the following on the console:
 
 ``` r
-metadatachecker_app()
+rwebridgechecker_app()
 ```
 
 A Shiny app will launch in a new window or in your default browser (if you set it as "Run External" from the menu next to "Run app"). 
@@ -77,7 +77,7 @@ will show the variables that are not present in the combined file.
 It is also possible to use check_study_variables function to compare two files, without launching the Shiny app. For example:
 
 ``` r
-library(metadatachecker)
+library(RWEBRIDGE-CHECKER)
 check_study_variables("Documents/study_var.csv","VarName",
 "Documents/metadata_file_example.csv",
 "CONCEPT")

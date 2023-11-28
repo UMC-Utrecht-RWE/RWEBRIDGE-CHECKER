@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(metadatachecker)
+library(RWEBRIDGECHECKER)
 
-test_check("metadatachecker")
+test_check("RWEBRIDGECHECKER")
