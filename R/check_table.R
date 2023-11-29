@@ -163,7 +163,7 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                                             "related_column_content",
                                             "related_column_note")]
 
-  
+  combined_check_df <- unique(combined_check_df)  
   return(list(table_format_results, combined_check_df))
 
   
