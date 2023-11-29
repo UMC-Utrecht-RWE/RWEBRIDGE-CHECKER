@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-RWEBRIDGE-CHECKER is an R package with a Shiny app for meta data file comparison to check the consistencies. The goal is to diagnose the inconsistencies between the meta data files before running the analytical pipeline. This package is the generalized version of metadatachecker, implemented within BRIDGE framework.
+RWEBRIDGE-CHECKER is an R package with an interactive Shiny app for meta data file consistency check based on expected RWE-BRIDGE schema. The goal is to diagnose the problems related with table contents and absence/presence of related tables for the uploaded user tables (csv). This package is the generalized version of metadatachecker, implemented within RWE-BRIDGE framework.
 
 ## Installation
 
@@ -24,7 +24,7 @@ install.packages("devtools")
 #Install RWEBRIDGE-CHECKER by typing this on R console
 devtools::install("path_to_the_directory_of_the_package", dependencies = TRUE)
 ```
-If it asks about updating the packages that are available in your system, I usually skip it and hope that I won't break anything. So far it worked, but please check it.
+If it asks about updating the packages that are available in your system, you can skip it and hope that it won't break anything. So far it works like this, but please check it.
 
 **Option 2.** Building from source (not recommended, but if you really have to, then it is in the following way):
 
@@ -44,7 +44,6 @@ needed libraries for metadatachecker:
 
 Here is how you can use RWEBRIDGE-CHECKER: 
 
-
 On R console, type the following:
 ``` r
 library(RWEBRIDGECHECKER)
@@ -60,17 +59,21 @@ A Shiny app will launch in a new window or in your default browser (if you set i
 
 In the app:
 
-- First tab is for checking the user table format and columns based on expected schema of the database (json).
+- First tab is for checking the user table columns and presence/absence of related tables based on expected schema of the database (json).
 
 You need to select and upload csv tables that you want to check. After pressing "Check consistency" button,
 two tables will appear:
 
+1. Format check for uploaded csv files: Format and column check for each uploaded table, and absence information for related table, if any 
+2. Check results for tables and their related tables: A table presenting detailed information about uploaded tables and their related tables
+
+In both tables Passed/Failed flag is provided together with a detailed note about failure.
 
 - Second tab is for generating an html report of the results and a downloadable html file is generated. 
 
 It is also possible to use individual functions of the package. An example
-is provided below for extract_relation_json function, which extrac the list of 
-related table from json for a given table name.
+is provided below for extract_relation_json function, which extracts the list of 
+related table from json schema for a given table name.
 
 ``` r
 library(RWEBRIDGECHECKER)
