@@ -1,6 +1,6 @@
 ---
-title: "RWEBRIDGE-CHEKCER report"
-author: "RWEBRIDGE-CHEKCER"
+title: "RWEBRIDGE-CHECKER report"
+author: "RWEBRIDGE-CHECKER"
 date: "`r format(Sys.time(), format = '%Y-%m-%d T %H:%M:%S')`"
 output: html_document
 params: 
@@ -17,24 +17,19 @@ based on json schema file in "inst/extdata/RWEBRIDGE_schema.json"
 
 ## Results
 
-Passed/Failed information with additional notes
-```{r display_results, echo=FALSE}
+**Format check for uploaded csv files**
+```{r display_format_table, echo=FALSE}
 if (!is.null(params$output_dir)){
   # Read and combine results from output directory
   list_of_files <- list.files(params$output_dir)
   format_table_path <- list_of_files[grep("format_table.csv",list_of_files)]
-  relation_table_path <- list_of_files[grep("realtion_table.csv",list_of_files)]
 
   if (length(format_table_path) != 0){
     format_table <- read.csv(paste(params$output_dir, format_table_path, sep = "/"),
                              stringsAsFactors = F,
-                             na.strings = c(""))
-    
-    format_table <- read.csv(paste(params$output_dir, relation_table_path, sep = "/"),
-                             stringsAsFactors = F,
-                             na.strings = c(""))
+                             na.strings = c("","NA"))
+    format_table[is.na(format_table)] <- " "
 
-    }
     x_html <- kableExtra::kable(
         format_table,
         format = "html",
@@ -43,7 +38,32 @@ if (!is.null(params$output_dir)){
     kableExtra::kable_styling(x_html, 
                     bootstrap_options = "bordered",
                     full_width = FALSE)
+
+  }
+
     
+  }
+  
+
+
+
+```
+
+
+**Check for related tables**
+```{r display_relation_table, echo=FALSE}
+if (!is.null(params$output_dir)){
+  # Read and combine results from output directory
+  list_of_files <- list.files(params$output_dir)
+  relation_table_path <- list_of_files[grep("relation_table.csv",list_of_files)]
+
+  if (length(relation_table_path) != 0){
+    relation_table <- read.csv(paste(params$output_dir, relation_table_path, sep = "/"),
+                             stringsAsFactors = F,
+                             na.strings = c("","NA"))
+    relation_table[is.na(relation_table)] <- " "
+
+        
     x_html <- kableExtra::kable(
         relation_table,
         format = "html",
@@ -52,6 +72,9 @@ if (!is.null(params$output_dir)){
     kableExtra::kable_styling(x_html, 
                     bootstrap_options = "bordered",
                     full_width = FALSE)
+
+  }
+  
   }
   
 
