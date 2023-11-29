@@ -45,7 +45,10 @@ extract_relation_json <- function(json_data, table_name){
     }
     
   } else {
-    relation_df <- "Failed"
+    relation_df <- data.frame(table_name = table_name,
+                              primary_key = "Failed",
+                              related_table_name = "Failed",
+                              foreign_key = "Failed")
   }
   
   return(relation_df)

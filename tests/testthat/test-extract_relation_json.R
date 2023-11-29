@@ -15,6 +15,6 @@ test_that("relation extraction from json - failure works", {
                                     package = "RWEBRIDGECHECKER")
   json_template <- jsonlite::fromJSON(json_template_path)$RWE_BRIDGE
   results <- extract_relation_json(json_template,"random_name")
-  expect_equal(results,"Failed")
+  expect_equal(results$primary_key,"Failed")
   
 })

@@ -24,6 +24,16 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                                                   )
                                            )
                                    )
+  # Check if supplied tables also contains related tables
+  related_table_list <- setdiff(table_relations$related_table_name, table_names)
+  related_table_list <- related_table_list[related_table_list!="Failed"]
+  flag <- 0
+  if (length(related_table_list) > 0){
+    initial_results <- data.frame(table_name = related_table_list, 
+                                  column_content = "Failed",
+                                  column_note = "This related table is missing")
+    flag <- 1
+  } 
   
   user_table_info <- data.frame(table_paths = user_table_csv_paths, table_name = table_names)
   table_results <- as.data.frame(
@@ -45,6 +55,7 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                    }
                  )
                table_name <- gsub("\\.csv","",x[2])
+               
                # Continue with error handling...
                if (any(try_output == "Error")){
                  column_content = "Failed"
@@ -60,7 +71,7 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                    # Check the content for columns
 
                    check_column_result <- extract_table_columns(json_template,table_name)
-
+                   
                    if (length(check_column_result) == 1 && any("Failed" %in% check_column_result)){
                      column_content = check_column_result
                      column_note = paste0(table_name, " is not present in the schema. Check the naming of the table")
@@ -107,12 +118,27 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
   
   # File format information about supplied tables
   table_format_results <- table_results
+  if (flag == 1){
+    table_format_results <- rbind(table_results,initial_results)
+  }
   
   # Content information within relation schema
   # Merge with table_relations
-  combined_check_df <- base::merge(table_relations, table_results, by.x = "table_name") 
-  colnames(table_results) = c("related_table_name","related_column_content","related_column_note")
-  combined_check_df <- base::merge(combined_check_df, table_results, by.x = "related_table_name") 
+  
+  colnames(table_format_results) = c("related_table_name",
+                                     "related_column_content",
+                                      "related_column_note")
+  combined_check_df <- base::merge(table_relations, 
+                                   table_format_results, 
+                                   by = "related_table_name",
+                                   all.x = T) 
+    
+  combined_check_df <- base::merge(combined_check_df, 
+                                   table_results, 
+                                   by = "table_name",
+                                   all.x = T) 
+    
+
 
   # Reorder the columns
   combined_check_df <- combined_check_df[,c("table_name",
