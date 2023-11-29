@@ -26,8 +26,8 @@ extract_relation_json <- function(json_data, table_name){
       relation_df <- rbind(relation_df, 
                            data.frame(table_name = table_name_i,
                                       primary_key = primary_key_i,
-                                      related_table_name = NA,
-                                      foreign_key = NA))
+                                      related_table_name = "No related table is present",
+                                      foreign_key = "No foreign key is present"))
     }
     else{
       # One or multiple foreign_key cases 

@@ -11,8 +11,7 @@
 #' @export 
 #'
 check_table <- function(user_table_csv_paths, table_names, json_template_path, delimiter = ","){
-  # Get the table names
-  #table_names <- gsub("\\.csv","",basename(user_table_csv_paths))
+
   # Read the json template schema
   json_template <- jsonlite::fromJSON(json_template_path)$RWE_BRIDGE
 
@@ -24,9 +23,12 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                                                   )
                                            )
                                    )
-  # Check if supplied tables also contains related tables
+  # Check if supplied tables also contain related tables
   related_table_list <- setdiff(table_relations$related_table_name, table_names)
   related_table_list <- related_table_list[related_table_list!="Failed"]
+  related_table_list <- related_table_list[related_table_list!="No related table is present"]
+  
+  
   flag <- 0
   if (length(related_table_list) > 0){
     initial_results <- data.frame(table_name = related_table_list, 
@@ -40,78 +42,89 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
     do.call(
       rbind,
       apply(user_table_info, 1,
-             # tryCatch to handle unexpected csv formats
              function(x){
-               try_output <- tryCatch(
-                 expr = {
-                   # Read table provided by the user
-                   message(paste("Reading", x[2]))
-                   user_table_df <- utils::read.csv(x[1], sep = delimiter)
-                   },
-                 error = function(e){
-                   message(paste0("Check ", x[2], ", the csv is not in expected format!"))
-                   #print(e)
-                   return("Error")
-                   }
-                 )
                table_name <- gsub("\\.csv","",x[2])
                
-               # Continue with error handling...
-               if (any(try_output == "Error")){
-                 column_content = "Failed"
-                 column_note = "File is not in table format"
-               } else {
-
-                 if (ncol(user_table_df) < 2){
-                   message(paste0(x[2]," is not in expected format (check delimiter)"))
-                   column_content = "Failed"
-                   column_note = "File has less than 2 columns, check the delimiter"
-                 } else { 
-
-                   # Check the content for columns
-
-                   check_column_result <- extract_table_columns(json_template,table_name)
+               # Check if the table is named correctly
+               if (table_name %in% json_template[["name"]]){
+                 
+                 # tryCatch to handle unexpected csv formats                 
+                 try_output <- tryCatch(
+                   expr = {
+                     # Read table provided by the user
+                     message(paste("Reading", x[2]))
+                     user_table_df <- utils::read.csv(x[1], sep = delimiter)
+                   },
+                   error = function(e){
+                     message(paste0("Check ", x[2], ", the csv is not in expected format!"))
+                     return("Error")
+                   }
+                 )
+                 
+                 
+                 # Continue with error handling...
+                 if (any(try_output == "Error")){
+                   column_content <- "Failed"
+                   column_note <- "File is not in csv format"
+                 } else { # If the file format is correct
                    
-                   if (length(check_column_result) == 1 && any("Failed" %in% check_column_result)){
-                     column_content = check_column_result
-                     column_note = paste0(table_name, " is not present in the schema. Check the naming of the table")
-                   } else {
- 
-                     expected_column_list <- check_column_result$name
-                     table_columns <- colnames(user_table_df)
-                     if (identical(sort(table_columns), sort(expected_column_list))){
-                       column_content = "Passed"
-                       column_note = paste0(table_name, " has all the expected columns")
+                   if (ncol(user_table_df) < 2){
+                     message(paste0(x[2]," is not in expected format (check delimiter)"))
+                     column_content <- "Failed"
+                     column_note <- "File has less than 2 columns (check the delimiter)"
+                     
+                   } else { # File is in expected format
+                     
+                     # Check the content for columns
+                     check_column_result <- extract_table_columns(json_template,table_name)
+                     
+                     if (length(check_column_result) == 1 && any("Failed" %in% check_column_result)){
+                       column_content <- check_column_result
+                       column_note <- paste0(table_name, " is not present in the schema (check the naming of the table)")
                      } else {
-                       column_content = "Failed"
-                       column_note = ""
-                       if (length(setdiff(expected_column_list,table_columns)) > 0 ){
-                         column_note = paste0(column_note, 
-                                              table_name, 
-                                              " is missing '",
-                                              setdiff(expected_column_list,
-                                                      table_columns),
-                                              "' "
-                                              )
-                       }
-                       if (length(setdiff(table_columns, expected_column_list)) > 0 ){
-                         column_note = paste0(column_note, 
-                                              table_name, 
-                                              " has '",
-                                              setdiff(table_columns, 
-                                                      expected_column_list),
-                                              "' which is not found in the schema")
+                       
+                       expected_column_list <- check_column_result$name
+                       table_columns <- colnames(user_table_df)
+                       if (identical(sort(table_columns), sort(expected_column_list))){
+                         column_content <- "Passed"
+                         column_note <- paste0(table_name, " has all the expected columns")
+                       } else {
+                         column_content <- "Failed"
+                         column_note <- ""
+                         if (length(setdiff(expected_column_list,table_columns)) > 0 ){
+                           column_note = paste0(column_note, 
+                                                table_name, 
+                                                " is missing '",
+                                                setdiff(expected_column_list,
+                                                        table_columns),
+                                                "' "
+                           )
+                         }
+                         if (length(setdiff(table_columns, expected_column_list)) > 0 ){
+                           column_note = paste0(column_note, 
+                                                table_name, 
+                                                " has '",
+                                                setdiff(table_columns, 
+                                                        expected_column_list),
+                                                "' which is not found in the schema")
+                         }
                        }
                      }
+                     
                    }
                    
-                   }
+                 }
                  
+                 conclusion <- data.frame(table_name = table_name, 
+                                          column_content = column_content,
+                                          column_note = column_note)
+               } else { # If the table name is not present in the schema
+                 conclusion <- data.frame(table_name = x[2], 
+                                          column_content = "Failed",
+                                          column_note = paste0(table_name,
+                                                               " is not present in the schema (check the naming of the table)")) 
                }
-             
-               return(data.frame(table_name = table_name, 
-                                 column_content = column_content,
-                                 column_note = column_note))
+               return(conclusion)
                })
       )
     )
