@@ -16,10 +16,10 @@ rwebridgechecker_app <- function(...) {
                                     "RWEBRIDGE_schema.json",
                                     package = "RWEBRIDGECHECKER")
   ui <- shiny::fluidPage(
-    theme = shinythemes::shinytheme("cerulean"),
-    shiny::h1("RWEBRIDGE-CHECKER"),
-    shiny::h3("Checking the consistency of uploaded table csv files with expected schema in db"),
-    shiny::navlistPanel(
+    theme = shinythemes::shinytheme("spacelab"),
+    #shiny::h1("RWEBRIDGE-CHECKER"),
+    shiny::h3("RWEBRIDGE-CHECKER: Consistency check for metadata tables with RWE-BRIDGE schema"),
+    shiny::navbarPage("CHECK",
       shiny::tabPanel("Select table(s) in csv format",
                       shiny::fluidRow(
                         shiny::column(width = 12,

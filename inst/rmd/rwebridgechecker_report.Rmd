@@ -2,7 +2,10 @@
 title: "RWEBRIDGE-CHECKER report"
 author: "RWEBRIDGE-CHECKER"
 date: "`r format(Sys.time(), format = '%Y-%m-%d T %H:%M:%S')`"
-output: html_document
+output: 
+  html_document:
+    theme: spacelab
+
 params: 
     output_dir: NULL
 ---
