@@ -28,7 +28,7 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
   related_table_list <- related_table_list[related_table_list!="Failed"]
   related_table_list <- related_table_list[related_table_list!="No related table is present"]
   
-  
+  # Flag for related table missingness
   flag <- 0
   if (length(related_table_list) > 0){
     initial_results <- data.frame(table_name = related_table_list, 
@@ -131,6 +131,8 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
   
   # File format information about supplied tables
   table_format_results <- table_results
+
+  # Combine initial results with tbale results for complete related table information
   if (flag == 1){
     table_format_results <- rbind(table_results,initial_results)
   }
@@ -164,6 +166,11 @@ check_table <- function(user_table_csv_paths, table_names, json_template_path, d
                                             "related_column_note")]
 
   combined_check_df <- unique(combined_check_df)  
+  # Rename table_format_results columns
+  colnames(table_format_results) = c("table_name",
+                                     "column_content",
+                                     "column_note")
+  
   return(list(table_format_results, combined_check_df))
 
   
